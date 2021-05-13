@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>e-learning platform</title>
+<style>
+body {
+    margin: 0;
+}
+
+#head {
+	height: 120px;
+	width: 100%;
+	background-color: #66CCCC;
+    background-image:url(img/head.png);
+    background-position: center bottom;
+    background-repeat:no-repeat;
+    background-size: 60%;
+	position: relative;
+    border-bottom-style: solid;
+    border-bottom-color: white;
+}
+
+#head .imgdiv {
+    padding-top: 10px;
+    padding-left: 10px;
+    width: 50%;
+    float:left;
+}
+
+
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    width: 25%;
+    background-color: #cdffff;
+    position: absolute;
+    height: 1000px;
+    overflow: auto;
+    border-right-style: solid;
+    border-right-color: white;
+}
+
+li a {
+    display: block;
+    color: #000;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 24px;
+
+}
+
+li a.active {
+    background-color: #4CAF50;
+    color: white;
+}
+
+li a:hover:not(.active) {
+    background-color: #555;
+    color: white;
+}
+
+.topnav {
+    overflow: hidden;
+    background-color: #333;
+}
+
+{% comment %} navigator link {% endcomment %}
+.topnav a {
+    float: left;
+    display: block;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    border: 2px groove gray;
+}
+ 
+ {% comment %} change link color {% endcomment %}
+.topnav a:hover {
+    background-color: #ddd;
+    color: black;
+}
+</style>
+</head>
+<body>
+    <div>
+        <div class="header" id="head">
+            <div class="imgdiv">
+                <img src="img/logo.png" height="100px" alt="head" />
+            </div>
+        </div>
+    </div>
+
+    <ul>
+        <li id="li1"><a onclick="gostu()">home</a></li>
+    </ul>
+
+    <div style="margin-left:25%;height:1000px;background-image: url(img/background1.jpg);background-size:100%; font-size:25px;">
+        <div class="topnav">
+            <a onclick="gostu()">home</a>
+            <a onclick="gorec()">class recommmand</a>
+        </div>
+        <div style="padding:1px 16px;">
+            <p id="p1">Some text..</p>
+            <p id="p2">Some text..</p>
+            <p id="p3">Some text..</p>
+            <p id="p4">Some text..</p>
+        </div>
+    </div>
+
+</body>
+</html>
+
+<script>
+
+function getparam(){
+	var query = location.search.substring(1);
+	var values= query.split("&"); 
+	
+	//************my***********
+	var value = new Array(values.length);
+	//************************
+	for(var i = 0; i < values.length; i++) {
+		var pos = values[i].indexOf('='); 
+		if (pos == -1) continue; 
+		var paramname = values[i].substring(0,pos);
+		//var value = values[i].substring(pos+1); 
+		value[i]=values[i].substring(pos+1); 
+		//alert(paramname +","+value[i] ); 
+		
+		} 	
+    return value
+}
+function gostu() {
+    var query = location.search.substring(1);
+	var values= query.split("&"); 
+	
+	//************my***********
+	var value = new Array(values.length);
+	//************************
+	for(var i = 0; i < values.length; i++) {
+		var pos = values[i].indexOf('='); 
+		if (pos == -1) continue; 
+		var paramname = values[i].substring(0,pos);
+		//var value = values[i].substring(pos+1); 
+		value[i]=values[i].substring(pos+1); 
+		//alert(paramname +","+value[i] ); 
+		
+		} 	
+    newWin=window.open('std_stu.html?id='+value[0]+'&type='+value[1],'newWin');
+}
+function gorec() {
+    var query = location.search.substring(1);
+	var values= query.split("&"); 
+	
+	//************my***********
+	var value = new Array(values.length);
+	//************************
+	for(var i = 0; i < values.length; i++) {
+		var pos = values[i].indexOf('='); 
+		if (pos == -1) continue; 
+		var paramname = values[i].substring(0,pos);
+		//var value = values[i].substring(pos+1); 
+		value[i]=values[i].substring(pos+1); 
+		//alert(paramname +","+value[i] ); 
+		
+		} 	
+    newWin=window.open('stu_rec.html?id='+value[0],'newWin');
+}
+function gocourse(course_id){
+    var query = location.search.substring(1);
+	var values= query.split("&"); 
+	
+	//************my***********
+	var value = new Array(values.length);
+	//************************
+	for(var i = 0; i < values.length; i++) {
+		var pos = values[i].indexOf('='); 
+		if (pos == -1) continue; 
+		var paramname = values[i].substring(0,pos);
+		//var value = values[i].substring(pos+1); 
+		value[i]=values[i].substring(pos+1); 
+		//alert(paramname +","+value[i] ); 
+		
+		} 	
+    newWin=window.open('stu_course.html?id='+value[0]+'&course_id='+course_id,'newWin');
+}
+var value = getparam();
+var id=value[0].split(",");
+//var id = "118011000";
+var xmlhttp;
+if (window.XMLHttpRequest)
+{
+    xmlhttp=new XMLHttpRequest();
+}
+else
+{
+    xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+}
+xmlhttp.onreadystatechange=function()
+{
+    if (xmlhttp.readyState==4 && xmlhttp.status==200)
+    {
+    var user_info = xmlhttp.responseText;
+    var value = user_info.split(" "); 
+    document.getElementById("p1").innerHTML=value[1]+" "+value[2]+" ("+value[0]+")";
+    document.getElementById("p2").innerHTML="Gender: "+value[3];
+    document.getElementById("p3").innerHTML="Major: "+value[4];
+    document.getElementById("p4").innerHTML="Department name: "+value[5];
+    if (value != -1) {
+        var xmlhttp1;
+        if (window.XMLHttpRequest)
+        {
+            xmlhttp1=new XMLHttpRequest();
+        }
+        else
+        {
+            xmlhttp1=new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp1.onreadystatechange=function()
+        {
+            if (xmlhttp1.readyState==4 && xmlhttp.status==200)
+            {
+            var course_info = xmlhttp1.responseText;
+            var value1 = course_info.split(" "); 
+            var side = document.getElementById("li1")
+            if (value != -1) {
+                for (i in value1) {
+                    var but = '<a onclick="gocourse(\''+value1[i]+'\')">'+value1[i]+'</a>';
+                    side.innerHTML+=but;
+                }
+            }
+            else {
+                window.alert("wrong ID");
+            }
+            }
+        }
+        xmlhttp1.open("GET","std_stu1.php?id="+String(id),true);
+        xmlhttp1.send();
+    }
+    else {
+        window.alert("wrong ID");
+    }
+    }
+}
+xmlhttp.open("GET","std_stu.php?id="+String(id),true);
+xmlhttp.send();
+
+</script>
