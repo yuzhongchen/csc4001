@@ -7,6 +7,7 @@ body {
     margin: 0;
 }
 
+
 #head {
 	height: 120px;
 	width: 100%;
@@ -26,7 +27,6 @@ body {
     width: 50%;
     float:left;
 }
-
 
 ul {
     list-style-type: none;
@@ -90,13 +90,12 @@ li a:hover:not(.active) {
     </div>
 
     <ul>
-        <li id="li1"><a onclick="gostu()">student home</a></li>
+        <li id="li1"><a onclick="goteacher()">teacher home</a></li>
     </ul>
 
-    <div style="margin-left:25%;height:1000px;background-image: url(img/background3.jpg);background-size: cover; font-size:25px;">
+    <div style="margin-left:25%;height:1000px;background-image: url(img/background1.jpg);background-size:100%; font-size:25px;">
         <div class="topnav">
-            <a onclick="gostu()">home</a>
-            <a onclick="gorec()">class recommmand</a>
+            <a onclick="goteacher()">home</a>
         </div>
         <div style="padding:1px 16px;">
             <p id="p1">Some text..</p>
@@ -129,7 +128,7 @@ function getparam(){
 		} 	
     return value
 }
-function gostu() {
+function goteacher() {
     var query = location.search.substring(1);
 	var values= query.split("&"); 
 	
@@ -145,9 +144,14 @@ function gostu() {
 		//alert(paramname +","+value[i] ); 
 		
 		} 	
-    newWin=window.open('std_stu.html?id='+value[0]+'&type='+value[1],'newWin');
+    newWin=window.open('std_teacher.html?id='+value[0]+'&type='+value[1],'newWin');
 }
-function gorec() {
+
+function gocourse(value){
+    value = value.split(",");
+    var course_id = value[0];
+    var year = value[1];
+    var semester = value[2]
     var query = location.search.substring(1);
 	var values= query.split("&"); 
 	
@@ -163,29 +167,10 @@ function gorec() {
 		//alert(paramname +","+value[i] ); 
 		
 		} 	
-    newWin=window.open('stu_rec.html?id='+value[0],'newWin');
-}
-function gocourse(course_id){
-    var query = location.search.substring(1);
-	var values= query.split("&"); 
-	
-	//************my***********
-	var value = new Array(values.length);
-	//************************
-	for(var i = 0; i < values.length; i++) {
-		var pos = values[i].indexOf('='); 
-		if (pos == -1) continue; 
-		var paramname = values[i].substring(0,pos);
-		//var value = values[i].substring(pos+1); 
-		value[i]=values[i].substring(pos+1); 
-		//alert(paramname +","+value[i] ); 
-		
-		} 	
-    newWin=window.open('stu_course.html?id='+value[0]+'&course_id='+course_id,'newWin');
+    newWin=window.open('teacher_course.html?id='+value[0]+'&course_id='+course_id+'&year='+year+'&semester='+semester,'newWin');
 }
 var value = getparam();
-var id=value[0].split(",");
-//var id = "118011000";
+var id=value[0].split(',');
 var xmlhttp;
 if (window.XMLHttpRequest)
 {
@@ -203,7 +188,7 @@ xmlhttp.onreadystatechange=function()
     var value = user_info.split(" "); 
     document.getElementById("p1").innerHTML=value[1]+" "+value[2]+" ("+value[0]+")";
     document.getElementById("p2").innerHTML="Gender: "+value[3];
-    document.getElementById("p3").innerHTML="Major: "+value[4];
+    document.getElementById("p3").innerHTML="Salary: "+value[4];
     document.getElementById("p4").innerHTML="Department name: "+value[5];
     if (value != -1) {
         var xmlhttp1;
@@ -224,7 +209,7 @@ xmlhttp.onreadystatechange=function()
             var side = document.getElementById("li1")
             if (value != -1) {
                 for (i in value1) {
-                    var but = '<a onclick="gocourse(\''+value1[i]+'\')">'+value1[i]+'</a>';
+                    var but = '<a onclick="gocourse(\''+value1[i]+'\')">'+value1[i]+'</a>';;
                     side.innerHTML+=but;
                 }
             }
@@ -233,7 +218,7 @@ xmlhttp.onreadystatechange=function()
             }
             }
         }
-        xmlhttp1.open("GET","std_stu1.php?id="+String(id),true);
+        xmlhttp1.open("GET","std_teacher1.php?id="+String(id),true);
         xmlhttp1.send();
     }
     else {
@@ -241,7 +226,7 @@ xmlhttp.onreadystatechange=function()
     }
     }
 }
-xmlhttp.open("GET","std_stu.php?id="+String(id),true);
+xmlhttp.open("GET","std_teacher.php?id="+String(id),true);
 xmlhttp.send();
 
 </script>

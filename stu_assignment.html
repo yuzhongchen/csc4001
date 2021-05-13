@@ -27,7 +27,6 @@ body {
     float:left;
 }
 
-
 ul {
     list-style-type: none;
     margin: 0;
@@ -94,15 +93,9 @@ li a:hover:not(.active) {
     </ul>
 
     <div style="margin-left:25%;height:1000px;background-image: url(img/background3.jpg);background-size: cover; font-size:25px;">
-        <div class="topnav">
-            <a onclick="gostu()">home</a>
-            <a onclick="gorec()">class recommmand</a>
+        <div class="topnav" id="div1">
         </div>
-        <div style="padding:1px 16px;">
-            <p id="p1">Some text..</p>
-            <p id="p2">Some text..</p>
-            <p id="p3">Some text..</p>
-            <p id="p4">Some text..</p>
+        <div style="padding:1px 16px;" id="div2">
         </div>
     </div>
 
@@ -165,6 +158,7 @@ function gorec() {
 		} 	
     newWin=window.open('stu_rec.html?id='+value[0],'newWin');
 }
+
 function gocourse(course_id){
     var query = location.search.substring(1);
 	var values= query.split("&"); 
@@ -183,9 +177,74 @@ function gocourse(course_id){
 		} 	
     newWin=window.open('stu_course.html?id='+value[0]+'&course_id='+course_id,'newWin');
 }
+
+function goassignment(assignment_id){
+    var query = location.search.substring(1);
+	var values= query.split("&"); 
+	
+	//************my***********
+	var value = new Array(values.length);
+	//************************
+	for(var i = 0; i < values.length; i++) {
+		var pos = values[i].indexOf('='); 
+		if (pos == -1) continue; 
+		var paramname = values[i].substring(0,pos);
+		//var value = values[i].substring(pos+1); 
+		value[i]=values[i].substring(pos+1); 
+		//alert(paramname +","+value[i] ); 
+		
+		} 	
+    newWin=window.open('stu_assignment.html?id='+value[0]+'&course_id='+value[1]+'&assignment_id='+assignment_id,'newWin');
+}
+
+function upload() {
+    var path = document.getElementById("path").value;
+    var query = location.search.substring(1);
+	var values= query.split("&"); 
+	
+	//************my***********
+	var value = new Array(values.length);
+	//************************
+	for(var i = 0; i < values.length; i++) {
+		var pos = values[i].indexOf('='); 
+		if (pos == -1) continue; 
+		var paramname = values[i].substring(0,pos);
+		//var value = values[i].substring(pos+1); 
+		value[i]=values[i].substring(pos+1); 
+		//alert(paramname +","+value[i] ); 
+		
+		} 	
+    var xmlhttp;
+    if (window.XMLHttpRequest)
+    {
+        xmlhttp=new XMLHttpRequest();
+    }
+    else
+    {
+        xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    xmlhttp.onreadystatechange=function()
+    {
+        if (xmlhttp.readyState==4)
+        {
+        var user_info = xmlhttp.responseText;
+        var value1 = user_info.split(" "); 
+        if (value1 != -1) {
+            window.alert("operation successed")
+        }
+        else {
+            window.alert("ID is already occupied");
+        }
+        }
+    }
+    xmlhttp.open("GET","stu_upload.php?path="+String(path)+"&id="+value[0]+"&course_id="+value[1]+"&assignment_id="+value[2],true);
+    xmlhttp.send();
+}
+
 var value = getparam();
 var id=value[0].split(",");
-//var id = "118011000";
+var course_id=value[1].split(",");
+var assignment_id=value[2].split(",");
 var xmlhttp;
 if (window.XMLHttpRequest)
 {
@@ -199,12 +258,31 @@ xmlhttp.onreadystatechange=function()
 {
     if (xmlhttp.readyState==4 && xmlhttp.status==200)
     {
-    var user_info = xmlhttp.responseText;
-    var value = user_info.split(" "); 
-    document.getElementById("p1").innerHTML=value[1]+" "+value[2]+" ("+value[0]+")";
-    document.getElementById("p2").innerHTML="Gender: "+value[3];
-    document.getElementById("p3").innerHTML="Major: "+value[4];
-    document.getElementById("p4").innerHTML="Department name: "+value[5];
+    var test_info = xmlhttp.responseText;
+    var value = test_info.split("|"); 
+    var type = "1";
+    for (i in value) {
+        if (i == 0) {
+            value[i] = value[i].split(",");
+            document.getElementById("div2").innerHTML="<p>"+value[i][0]+"&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp"+value[i][2]+"/"+value[i][3]+"</p>";
+            document.getElementById("div2").innerHTML+="<p>"+value[i][4]+"</p><br>";
+            type = value[i][1];
+        } else {
+            value[i] = value[i].split(",");
+            if (type == "1") {
+                if (value[i][1] == "1"){
+                    document.getElementById("div2").innerHTML+="<p>"+value[i][0]+"&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp"+value[i][2]+"/"+value[i][2]+"</p>";
+                } else {
+                    document.getElementById("div2").innerHTML+="<p>"+value[i][0]+"&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp0/"+value[i][2]+"</p>";
+                }
+            } else {
+                document.getElementById("div2").innerHTML+="<p>"+value[i][0]+"</p>";
+            }
+            document.getElementById("div2").innerHTML+="<p>"+value[i][3]+"</p><br>";
+        }
+    }
+    document.getElementById("div2").innerHTML+="File you want to upload: <input type=\"text\" id=\"path\" value=\"File name here\" size=\"35\"><br>";
+    document.getElementById("div2").innerHTML+="<img src=\"img/upload.png\" width=\"50\" onclick=\"upload()\">";
     if (value != -1) {
         var xmlhttp1;
         if (window.XMLHttpRequest)
@@ -231,6 +309,35 @@ xmlhttp.onreadystatechange=function()
             else {
                 window.alert("wrong ID");
             }
+            var xmlhttp2;
+			if (window.XMLHttpRequest)
+			{
+				xmlhttp2=new XMLHttpRequest();
+			}
+			else
+			{
+				xmlhttp2=new ActiveXObject("Microsoft.XMLHTTP");
+			}
+			xmlhttp2.onreadystatechange=function()
+			{
+				if (xmlhttp2.readyState==4 && xmlhttp.status==200)
+				{
+				var assignment_info = xmlhttp2.responseText;
+				var value2 = assignment_info.split("|"); 
+                var side1 = document.getElementById("div1");
+                var but = '<a onclick="gocourse(\''+course_id+'\')">'+'home'+'</a>';
+                side1.innerHTML+=but;
+				if (value2 != -1) {
+                    for (i in value2) {
+                        value2[i] = value2[i].split(",");
+                        var but1 = '<a onclick="goassignment(\''+value2[i][0]+'\')">'+value2[i][1]+'</a>';
+                        side1.innerHTML+=but1;
+                    }
+				}
+				}
+			}
+			xmlhttp2.open("GET","stu_assignment.php?id="+String(id)+"&course_id="+String(course_id),true);
+			xmlhttp2.send();
             }
         }
         xmlhttp1.open("GET","std_stu1.php?id="+String(id),true);
@@ -241,7 +348,7 @@ xmlhttp.onreadystatechange=function()
     }
     }
 }
-xmlhttp.open("GET","std_stu.php?id="+String(id),true);
+xmlhttp.open("GET","stu_test.php?id="+String(id)+"&course_id="+String(course_id)+"&assignment_id="+String(assignment_id),true);
 xmlhttp.send();
 
 </script>

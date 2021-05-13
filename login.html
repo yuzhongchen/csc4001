@@ -1,4 +1,4 @@
-
+﻿
 <!doctype html>
 <html>
 <head>
@@ -12,7 +12,7 @@
 #wrap {
 	height: 719px;
 	width: 100;
-	background-image: url(4.jpg);
+	background-image: url(img/background2.jpg);
 	background-repeat: no-repeat;
 	background-position: center center;
 	position: relative;
@@ -31,12 +31,21 @@
 	position: relative;
 }
 #wrap .logGet {
-	height: 408px;
-	width: 368px;  
+	height: 550px;
+	width: 380px;  
 	position: absolute;
+	background-image: url(img/login_background.png);
+	background-repeat: no-repeat;
+	background-position: center center;
 	background-color: #FFFFFF;
-	top: 20%;
-	right: 15%;
+	opacity:0.85;
+	top: 10%;
+	right: 10%;
+}
+#wrap .leftimg { 
+	position: absolute;
+	top: 10%;
+	left: 5%;
 }
 .logC a button {
 	width: 100%;
@@ -44,10 +53,12 @@
 	background-color: #ee7700;
 	border: none;
 	color: white;
+	font-family:"Comic Sans MS", cursive, sans-serif;
 	font-size: 18px;
 }
 .logGet .logD.logDtip .p1 {
 	display: inline-block;
+	font-family:"Comic Sans MS", cursive, sans-serif;
 	font-size: 28px;
 	margin-top: 30px;
 	width: 86%;
@@ -56,9 +67,15 @@
 	width: 86%;
 	border-bottom: 1px solid #ee7700;
 	margin-bottom: 60px;
-	margin-top: 0px;
+	margin-top: 20px;
 	margin-right: auto;
 	margin-left: auto;
+	text-align:center;
+}
+.logGet .logD logo {
+    position: absolute;
+    top: 12px;
+    left: 10px;
 }
 .logGet .lgD img {
 	position: absolute;
@@ -108,34 +125,41 @@
  
 <body>
 <div class="header" id="head">
-  <div class="title">e-learning platform</div>
+  <br></br>
+  <img src="img/head.png" width=60%>
 	
 </div>
 	
 <div class="wrap" id="wrap">
+	<div class="leftimg">
+	<img src="img/mainpaper.jpg" height=550px>
+	</div>
 	<div class="logGet">
 			<!-- 头部提示信息 -->
 			<div class="logD logDtip">
-				<p class="p1">login</p>
+				<img src="img/logo.png" width="220" alt="logo" />
+				<p class="p1">Please login here</p>
 			</div>
 			<!-- 输入框 -->
 			<div class="lgD">
-				<img src="img/logName.png" width="20" height="20" alt=""/>
+				<img src="img/user.png" width="20" height="20" alt=""/>
 				<input type="text"
-					placeholder="enter user ID"  name = "id"/>
+					placeholder="enter user ID" name="id" id = "id"/>
 			</div>
 			<div class="lgD">
-				<img src="img/logPwd.png" width="20" height="20" alt=""/>
+				<img src="img/password.png" width="20" height="20" alt=""/>
 				<input type="text"
-					placeholder="enter password"  name = "password"/>
+					placeholder="enter password" name="password" id = "password"/>
 			</div>
             <div class="logC">
-				<a href="index.html" target="_self"><button onclick = "verify()">login</button></a>
+				<a target="_self"><button onclick = "verify()">login</button></a>
 			</div>
 		</div>
 </div>
 	
 <div class="footer" id="foot">
+	<br></br>
+	<p style="text-align:center; font-size:28px; font-family:'Comic Sans MS';">Credict to Chen Yuzhong, Wang Feiyang, Wang Yian, Wang Yifei and Zhao Yuchen.</p>
 </div>
 	
 	
@@ -144,33 +168,44 @@
 
 <script>
         function verify() {
-            var id = document.getElementsByName('id')[0];
-            var password = document.getElementsByName('password')[0];
+            var id = document.getElementById('id');
+            var password = document.getElementById('password');
             var idv  =id.value;
             var passwordv = password.value;
-            if (correctID() == 1) {
-                switch(getType(id)) {
-                    case 1:     //student
-                        self.location="std_stu.html"; 
-                        //window.alert(1);
-                        break;
-                    case 2:     //teacher
-                        //self.location="std_teacher.html"; 
-                        window.alert(2);
-                        break;
-                    default:    //adminstrator
-                        //self.location="std_admin.html"; 
-                        window.alert(3);
-                }
-            }
-            else {
-                window.alert("wrong ID or password");
-            }
-        }
-        function correctID() {
-            return 1;     // sql 1: correct id and password, 2: invalid
-        }
-        function getType(id) {
-            return 1;     // 1: student, 2: teacher, 3:adminstratoe
+			var xmlhttp;
+			if (window.XMLHttpRequest)
+			{
+				xmlhttp=new XMLHttpRequest();
+			}
+			else
+			{
+				xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+			}
+			xmlhttp.onreadystatechange=function()
+			{
+				if (xmlhttp.readyState==4 && xmlhttp.status==200)
+				{
+				var user_info = xmlhttp.responseText;
+				var value = user_info.split(" "); 
+				if (value != -1) {
+					switch(value[1]) {
+						case "2":     //student
+							newWin=window.open('std_stu.html?id='+value[0]+'&type='+value[1],'newWin');
+							//window.alert(1);
+							break;
+						case "1":     //teacher
+							newWin=window.open('std_teacher.html?id='+value[0]+'&type='+value[1],'newWin');
+							break;
+						default:    //adminstrator
+							newWin=window.open('std_admin.html?id='+value[0]+'&type='+value[1],'newWin');
+					}
+				}
+				else {
+					window.alert("wrong ID or password");
+				}
+				}
+			}
+			xmlhttp.open("GET","login.php?id="+String(idv)+"&password="+String(passwordv),true);
+			xmlhttp.send();
         }
 </script>

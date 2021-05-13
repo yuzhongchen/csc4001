@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>e-learning platform</title>
+<style>
+body {
+    margin: 0;
+}
+
+
+#head {
+	height: 120px;
+	width: 100%;
+	background-color: #66CCCC;
+    background-image:url(img/head.png);
+    background-position: center bottom;
+    background-repeat:no-repeat;
+    background-size: 60%;
+	position: relative;
+    border-bottom-style: solid;
+    border-bottom-color: white;
+}
+
+#head .imgdiv {
+    padding-top: 10px;
+    padding-left: 10px;
+    width: 50%;
+    float:left;
+}
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    width: 25%;
+    background-color: #cdffff;
+    position: absolute;
+    height: 1000px;
+    overflow: auto;
+}
+
+li a {
+    display: block;
+    color: #000;
+    padding: 8px 16px;
+    text-decoration: none;
+	font-size: 24px;
+}
+
+li a.active {
+    background-color: #4CAF50;
+    color: white;
+}
+
+li a:hover:not(.active) {
+    background-color: #555;
+    color: white;
+}
+
+.topnav {
+    overflow: hidden;
+    background-color: #333;
+}
+
+{% comment %} navigator link {% endcomment %}
+.topnav a {
+    float: left;
+    display: block;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+ 
+ {% comment %} change link color {% endcomment %}
+.topnav a:hover {
+    background-color: #ddd;
+    color: black;
+}
+*{
+	margin: 0;
+	padding: 0;
+}
+#wrap {
+	height: 1019px;
+	width: 100;
+	background-image: url(img/background1.jpg);
+	background-repeat: no-repeat;
+	background-position: center center;
+	position: relative;
+}
+
+#foot {
+	width: 100;
+	height: 126px;
+	background-color: #CC9933;
+	position: relative;
+}
+#wrap .logGet {
+	height: 408px;
+	width: 368px;  
+	position: absolute;
+	background-color: #88FFFF;
+	top: 20%;
+	right: 35%;
+}
+#wrap .leftimg { 
+	position: absolute;
+	top: 15%;
+	left: 5%;
+}
+.logC a button {
+	width: 100%;
+	height: 45px;
+	background-color: #ee7700;
+	border: none;
+	color: white;
+	font-size: 18px;
+}
+.logGet .logD.logDtip .p1 {
+	display: inline-block;
+	font-size: 28px;
+	margin-top: 30px;
+	width: 86%;
+}
+#wrap .logGet .logD.logDtip {
+	width: 86%;
+	border-bottom: 1px solid #ee7700;
+	margin-bottom: 60px;
+	margin-top: 0px;
+	margin-right: auto;
+	margin-left: auto;
+}
+.logGet .lgD img {
+	position: absolute;
+	top: 12px;
+	left: 8px;
+}
+.logGet .lgD input {
+	width: 100%;
+	height: 42px;
+	text-indent: 2.5rem;
+}
+#wrap .logGet .lgD {
+	width: 86%;
+	position: relative;
+	margin-bottom: 30px;
+	margin-top: 30px;
+	margin-right: auto;
+	margin-left: auto;
+}
+#wrap .logGet .logC {
+	width: 86%;
+	margin-top: 0px;
+	margin-right: auto;
+	margin-bottom: 0px;
+	margin-left: auto;
+}
+ 
+ 
+.title {
+	font-family: "宋体";
+	color: #FFFFFF;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);  /* 使用css3的transform来实现 */
+	font-size: 36px;
+	height: 40px;
+	width: 30%;
+}
+
+#foot .copyright p {
+	height: 24px;
+	width: 100%;
+}
+</style>
+</head>
+<body>
+
+	<div>
+		<div class="header" id="head">
+			<div class="imgdiv">
+				<img src="img/logo.png" height="100px" alt="head" />
+			</div>
+		</div>
+	</div>
+
+	<ul>
+		<li id="li1"><a>register</a></li>
+	</ul>
+
+	<div style="margin-left:25%;height:1000px;font-size:25px;">
+		<div class="topnav">
+			<a>register</a>
+		</div>
+		<div class="wrap" id="wrap">
+			<div class="leftimg">
+			</div>
+			<div class="logGet">
+				<!-- 头部提示信息 -->
+				<div class="logD logDtip">
+					<p class="p1">register</p>
+				</div>
+				<!-- 输入框 -->
+				<div class="lgD">
+					<img src="img/user.png" width="20" height="20" alt="" />
+					<input type="text"
+						   placeholder="enter user ID" name="id" id="id" />
+				</div>
+				<div class="lgD">
+					<img src="img/password.png" width="20" height="20" alt="" />
+					<input type="text"
+						   placeholder="enter password" name="password" id="password" />
+				</div>
+				<div class="lgD">
+					<img src="img/logo.png" width="20" height="20" alt="" />
+					<input type="text"
+						   placeholder="enter user type" name="type" id="type" />
+				</div>
+				<div class="logC">
+					<a target="_self"><button onclick="verify()">add account</button></a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+
+
+
+
+</body>
+</html>
+
+<script>
+        function verify() {
+            var id = document.getElementById('id');
+            var password = document.getElementById('password');
+            var type = document.getElementById('type');
+            var idv  =id.value;
+            var passwordv = password.value;
+            var typev = type.value;
+			var xmlhttp;
+			if (window.XMLHttpRequest)
+			{
+				xmlhttp=new XMLHttpRequest();
+			}
+			else
+			{
+				xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+			}
+			xmlhttp.onreadystatechange=function()
+			{
+				if (xmlhttp.readyState==4 && xmlhttp.status==200)
+				{
+				var user_info = xmlhttp.responseText;
+				var value = user_info.split(" "); 
+				if (value != -1) {
+                    window.alert("operation successed")
+				}
+				else {
+					window.alert("ID is already occupied");
+				}
+				}
+			}
+			xmlhttp.open("GET","std_admin.php?id="+String(idv)+"&password="+String(passwordv)+"&type="+typev,true);
+			xmlhttp.send();
+        }
+</script>

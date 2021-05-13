@@ -7,6 +7,7 @@ body {
     margin: 0;
 }
 
+
 #head {
 	height: 120px;
 	width: 100%;
@@ -26,7 +27,6 @@ body {
     width: 50%;
     float:left;
 }
-
 
 ul {
     list-style-type: none;
@@ -94,15 +94,10 @@ li a:hover:not(.active) {
     </ul>
 
     <div style="margin-left:25%;height:1000px;background-image: url(img/background3.jpg);background-size: cover; font-size:25px;">
-        <div class="topnav">
-            <a onclick="gostu()">home</a>
-            <a onclick="gorec()">class recommmand</a>
+        <div class="topnav" id="div1">
         </div>
         <div style="padding:1px 16px;">
             <p id="p1">Some text..</p>
-            <p id="p2">Some text..</p>
-            <p id="p3">Some text..</p>
-            <p id="p4">Some text..</p>
         </div>
     </div>
 
@@ -165,6 +160,7 @@ function gorec() {
 		} 	
     newWin=window.open('stu_rec.html?id='+value[0],'newWin');
 }
+
 function gocourse(course_id){
     var query = location.search.substring(1);
 	var values= query.split("&"); 
@@ -183,9 +179,29 @@ function gocourse(course_id){
 		} 	
     newWin=window.open('stu_course.html?id='+value[0]+'&course_id='+course_id,'newWin');
 }
+
+function goassignment(assignment_id){
+    var query = location.search.substring(1);
+	var values= query.split("&"); 
+	
+	//************my***********
+	var value = new Array(values.length);
+	//************************
+	for(var i = 0; i < values.length; i++) {
+		var pos = values[i].indexOf('='); 
+		if (pos == -1) continue; 
+		var paramname = values[i].substring(0,pos);
+		//var value = values[i].substring(pos+1); 
+		value[i]=values[i].substring(pos+1); 
+		//alert(paramname +","+value[i] ); 
+		
+		} 	
+    newWin=window.open('stu_assignment.html?id='+value[0]+'&course_id='+value[1]+'&assignment_id='+assignment_id,'newWin');
+}
+
 var value = getparam();
 var id=value[0].split(",");
-//var id = "118011000";
+var course_id=value[1].split(",");
 var xmlhttp;
 if (window.XMLHttpRequest)
 {
@@ -201,10 +217,7 @@ xmlhttp.onreadystatechange=function()
     {
     var user_info = xmlhttp.responseText;
     var value = user_info.split(" "); 
-    document.getElementById("p1").innerHTML=value[1]+" "+value[2]+" ("+value[0]+")";
-    document.getElementById("p2").innerHTML="Gender: "+value[3];
-    document.getElementById("p3").innerHTML="Major: "+value[4];
-    document.getElementById("p4").innerHTML="Department name: "+value[5];
+    document.getElementById("p1").innerHTML="You are taking "+course_id+" in "+value[1]+" "+value[0]+". <br><br>And your grade is: "+ value[2]+".";
     if (value != -1) {
         var xmlhttp1;
         if (window.XMLHttpRequest)
@@ -231,6 +244,35 @@ xmlhttp.onreadystatechange=function()
             else {
                 window.alert("wrong ID");
             }
+            var xmlhttp2;
+			if (window.XMLHttpRequest)
+			{
+				xmlhttp2=new XMLHttpRequest();
+			}
+			else
+			{
+				xmlhttp2=new ActiveXObject("Microsoft.XMLHTTP");
+			}
+			xmlhttp2.onreadystatechange=function()
+			{
+				if (xmlhttp2.readyState==4 && xmlhttp.status==200)
+				{
+				var assignment_info = xmlhttp2.responseText;
+				var value2 = assignment_info.split("|"); 
+                var side1 = document.getElementById("div1");
+                var but = '<a onclick="gocourse(\''+course_id+'\')">'+'home'+'</a>';
+                side1.innerHTML+=but;
+				if (value2 != -1) {
+                    for (i in value2) {
+                        value2[i] = value2[i].split(",");
+                        var but1 = '<a onclick="goassignment(\''+value2[i][0]+'\')">'+value2[i][1]+'</a>';
+                        side1.innerHTML+=but1;
+                    }
+				}
+				}
+			}
+			xmlhttp2.open("GET","stu_assignment.php?id="+String(id)+"&course_id="+String(course_id),true);
+			xmlhttp2.send();
             }
         }
         xmlhttp1.open("GET","std_stu1.php?id="+String(id),true);
@@ -241,7 +283,7 @@ xmlhttp.onreadystatechange=function()
     }
     }
 }
-xmlhttp.open("GET","std_stu.php?id="+String(id),true);
+xmlhttp.open("GET","stu_course.php?id="+String(id)+"&course_id="+String(course_id),true);
 xmlhttp.send();
 
 </script>

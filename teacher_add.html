@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>e-learning platform</title>
+<style>
+body {
+    margin: 0;
+}
+
+#head {
+	height: 120px;
+	width: 100%;
+	background-color: #66CCCC;
+    background-image:url(img/head.png);
+    background-position: center bottom;
+    background-repeat:no-repeat;
+    background-size: 60%;
+	position: relative;
+    border-bottom-style: solid;
+    border-bottom-color: white;
+}
+
+#head .imgdiv {
+    padding-top: 10px;
+    padding-left: 10px;
+    width: 50%;
+    float:left;
+}
+
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    width: 25%;
+    background-color: #cdffff;
+    position: absolute;
+    height: 1000px;
+    overflow: auto;
+}
+
+li a {
+    display: block;
+    color: #000;
+    padding: 8px 16px;
+    text-decoration: none;
+    font-size: 24px;
+}
+
+li a.active {
+    background-color: #4CAF50;
+    color: white;
+}
+
+li a:hover:not(.active) {
+    background-color: #555;
+    color: white;
+}
+
+.topnav {
+    overflow: hidden;
+    background-color: #333;
+}
+
+{% comment %} navigator link {% endcomment %}
+.topnav a {
+    float: left;
+    display: block;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+ 
+ {% comment %} change link color {% endcomment %}
+.topnav a:hover {
+    background-color: #ddd;
+    color: black;
+}
+</style>
+</head>
+<body>
+
+    <div>
+        <div class="header" id="head">
+            <div class="imgdiv">
+                <img src="img/logo.png" height="100px" alt="head" />
+            </div>
+        </div>
+    </div>
+
+    <ul>
+        <li id="li1"><a onclick="goteacher()">teacher home</a></li>
+    </ul>
+
+    <div style="margin-left:25%;height:1000px;background-image: url(img/background1.jpg);background-size:100%; font-size:25px;">
+        <div class="topnav" id="li2">
+        </div>
+        <div style="padding:10px 16px;" id="div1">
+            <div style="padding: 5px 20px; float:left; width:20%;">
+                Title: <br /> Description: <br /> Total Grade: <br /> Type: <br />
+            </div>
+            <div style="padding: 5px 20px; float:left; width:70%;">
+                <input type="text" id="title" placeholder="Title here" size="35"> <br />
+                <input type="text" id="description" placeholder="Description here" size="50"><br />
+                <input type="text" id="grade" placeholder="Total grade here"><br />
+                <input type="text" id="type" placeholder="Type here(1 for auto grade)" />
+            </div>
+            <img src="img/click.png" width="50" onclick="addassignment()" style="display:block; margin:0px 20%; padding-top: 20px;">
+        </div>
+    </div>
+
+</body>
+</html>
+
+<script>
+function addassignment() {
+    var title = document.getElementById("title").value;
+    var descript = document.getElementById("description").value;
+    var tGrade = document.getElementById("grade").value;
+    var type = document.getElementById("type").value;
+    var query = location.search.substring(1);
+	var values= query.split("&"); 
+	
+	//************my***********
+	var value = new Array(values.length);
+	//************************
+	for(var i = 0; i < values.length; i++) {
+		var pos = values[i].indexOf('='); 
+		if (pos == -1) continue; 
+		var paramname = values[i].substring(0,pos);
+		//var value = values[i].substring(pos+1); 
+		value[i]=values[i].substring(pos+1); 
+		//alert(paramname +","+value[i] ); 
+		
+		} 	
+    var xmlhttp;
+    if (window.XMLHttpRequest)
+    {
+        xmlhttp=new XMLHttpRequest();
+    }
+    else
+    {
+        xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    xmlhttp.onreadystatechange=function()
+    {
+        if (xmlhttp.readyState==4)
+        {
+        var user_info = xmlhttp.responseText;
+        var value = user_info.split(" "); 
+        if (value != -1) {
+            window.alert("operation successed")
+        }
+        else {
+            window.alert("ID is already occupied");
+        }
+        }
+    }
+    xmlhttp.open("GET","teacher_add.php?course_id="+value[1]+"&year="+value[2]+"&semester="+value[3]+"&title="+String(title)+"&descript="+String(descript)+"&total="+String(tGrade)+"&type="+String(type),true);
+    xmlhttp.send();
+}
+
+function getparam(){
+	var query = location.search.substring(1);
+	var values= query.split("&"); 
+	
+	//************my***********
+	var value = new Array(values.length);
+	//************************
+	for(var i = 0; i < values.length; i++) {
+		var pos = values[i].indexOf('='); 
+		if (pos == -1) continue; 
+		var paramname = values[i].substring(0,pos);
+		//var value = values[i].substring(pos+1); 
+		value[i]=values[i].substring(pos+1); 
+		//alert(paramname +","+value[i] ); 
+		
+		} 	
+    return value
+}
+function goteacher() {
+    var query = location.search.substring(1);
+	var values= query.split("&"); 
+	
+	//************my***********
+	var value = new Array(values.length);
+	//************************
+	for(var i = 0; i < values.length; i++) {
+		var pos = values[i].indexOf('='); 
+		if (pos == -1) continue; 
+		var paramname = values[i].substring(0,pos);
+		//var value = values[i].substring(pos+1); 
+		value[i]=values[i].substring(pos+1); 
+		//alert(paramname +","+value[i] ); 
+		
+		} 	
+    newWin=window.open('std_teacher.html?id='+value[0]+'&type='+1,'newWin');
+}
+
+function gocourse(value){
+    value = value.split(",")
+    var course_id = value[0];
+    var year = value[1];
+    var semester = value[2];
+    var query = location.search.substring(1);
+	var values= query.split("&"); 
+	
+	//************my***********
+	var value = new Array(values.length);
+	//************************
+	for(var i = 0; i < values.length; i++) {
+		var pos = values[i].indexOf('='); 
+		if (pos == -1) continue; 
+		var paramname = values[i].substring(0,pos);
+		//var value = values[i].substring(pos+1); 
+		value[i]=values[i].substring(pos+1); 
+		//alert(paramname +","+value[i] ); 
+		
+		} 	
+    newWin=window.open('teacher_course.html?id='+value[0]+'&course_id='+course_id+'&year='+year+'&semester='+semester,'newWin');
+}
+
+function goadd(){
+    var query = location.search.substring(1);
+	var values= query.split("&"); 
+	
+	//************my***********
+	var value = new Array(values.length);
+	//************************
+	for(var i = 0; i < values.length; i++) {
+		var pos = values[i].indexOf('='); 
+		if (pos == -1) continue; 
+		var paramname = values[i].substring(0,pos);
+		//var value = values[i].substring(pos+1); 
+		value[i]=values[i].substring(pos+1); 
+		//alert(paramname +","+value[i] ); 
+		
+		} 	
+    newWin=window.open('teacher_add.html?id='+value[0]+'&course_id='+value[1]+'&year='+value[2]+'&semester='+value[3],'newWin');
+}
+
+function gotest(){
+    var query = location.search.substring(1);
+	var values= query.split("&"); 
+	
+	//************my***********
+	var value = new Array(values.length);
+	//************************
+	for(var i = 0; i < values.length; i++) {
+		var pos = values[i].indexOf('='); 
+		if (pos == -1) continue; 
+		var paramname = values[i].substring(0,pos);
+		//var value = values[i].substring(pos+1); 
+		value[i]=values[i].substring(pos+1); 
+		//alert(paramname +","+value[i] ); 
+		
+		} 	
+    newWin=window.open('teacher_test.html?id='+value[0]+'&course_id='+value[1]+'&year='+value[2]+'&semester='+value[3],'newWin');
+}
+
+function goassignment(value1){
+    var query = location.search.substring(1);
+	var values= query.split("&"); 
+	
+	//************my***********
+	var value = new Array(values.length);
+	//************************
+	for(var i = 0; i < values.length; i++) {
+		var pos = values[i].indexOf('='); 
+		if (pos == -1) continue; 
+		var paramname = values[i].substring(0,pos);
+		//var value = values[i].substring(pos+1); 
+		value[i]=values[i].substring(pos+1); 
+		//alert(paramname +","+value[i] ); 
+		
+		} 	
+    newWin=window.open('teacher_assignment.html?id='+value[0]+'&course_id='+value[1]+'&year='+value[2]+'&semester='+value[3]+"&assignment_id="+value1,'newWin');
+}
+
+var value = getparam();
+var id=value[0];
+var course_id=value[1];
+var year=value[2];
+var semester=value[3];
+var xmlhttp;
+if (window.XMLHttpRequest)
+{
+    xmlhttp=new XMLHttpRequest();
+}
+else
+{
+    xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+}
+xmlhttp.onreadystatechange=function()
+{
+    if (xmlhttp.readyState==4 && xmlhttp.status==200)
+    {
+    var user_info = xmlhttp.responseText;
+    var value = user_info.split(" "); 
+    var xmlhttp1;
+    if (window.XMLHttpRequest)
+    {
+        xmlhttp1=new XMLHttpRequest();
+    }
+    else
+    {
+        xmlhttp1=new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    xmlhttp1.onreadystatechange=function()
+    {
+        if (xmlhttp1.readyState==4 && xmlhttp.status==200)
+        {
+        var course_info = xmlhttp1.responseText;
+        var value1 = course_info.split(" "); 
+        var side = document.getElementById("li1")
+        if (value1 != -1) {
+            for (i in value1) {
+                var but = '<a onclick="gocourse(\''+value1[i]+'\')">'+value1[i]+'</a>';;
+                side.innerHTML+=but;
+            }
+        }
+        else {
+            window.alert("wrong ID");
+        }
+        var xmlhttp2;
+        if (window.XMLHttpRequest)
+        {
+            xmlhttp2=new XMLHttpRequest();
+        }
+        else
+        {
+            xmlhttp2=new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp2.onreadystatechange=function()
+        {
+            if (xmlhttp2.readyState==4 && xmlhttp2.status==200)
+            {
+            var assignment_info = xmlhttp2.responseText;
+            var value2 = assignment_info.split("|"); 
+            var side = document.getElementById("li2");
+            var but = '<a onclick="gocourse(\''+course_id+','+year+','+semester+'\')">'+'home'+'</a>';
+            var but1 = '<a onclick="goadd()">add assignment</a>'
+            var but2 = '<a onclick="gotest()">add test</a>'
+            side.innerHTML+=but;
+            side.innerHTML+=but1;
+            side.innerHTML+=but2;
+            if (value != -1) {
+                for (i in value2) {
+                    value2[i] = value2[i].split(",");
+                    var but = '<a onclick="goassignment(\''+value2[i][0]+'\')">'+value2[i][1]+'</a>';
+                    side.innerHTML+=but;
+                }
+            }
+            }
+        }
+        xmlhttp2.open("GET","teacher_course1.php?id="+String(id)+"&course_id="+String(course_id)+"&year="+String(year)+"&semester="+String(semester),true);
+        xmlhttp2.send();
+        }
+    }
+    xmlhttp1.open("GET","std_teacher1.php?id="+String(id),true);
+    xmlhttp1.send();
+    }
+}
+xmlhttp.open("GET","teacher_course.php?id="+String(id)+"&course_id="+String(course_id)+"&year="+String(year)+"&semester="+String(semester),true);
+xmlhttp.send();
+
+</script>
